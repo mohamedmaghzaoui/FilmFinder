@@ -1,12 +1,12 @@
-import { eq } from 'drizzle-orm';
+import { eq } from "drizzle-orm";
 
-import { db, movies } from '../../db';
+import { db, movies } from "../../db";
 
-import { isMock } from '../../config/dataSource';
+import { isMock } from "../../config/dataSource";
 
-import { moviesMock } from './mocks/movies';
+import { moviesMock } from "./mocks/movies";
 
-import { Movie, MovieRequest, MovieUpdateRequest } from './types/movies';
+import { Movie, MovieRequest, MovieUpdateRequest } from "./types/movies";
 
 export class MovieRepository {
   async findAll(): Promise<Movie[]> {
@@ -49,7 +49,7 @@ export class MovieRepository {
 
   async update(id: number, movie: MovieUpdateRequest): Promise<Movie | null> {
     if (isMock()) {
-      const index = moviesMock.findIndex((m) => m.id === id);
+      const index = moviesMock.findIndex((movie) => movie.id === id);
 
       if (index === -1) {
         return null;
@@ -70,7 +70,7 @@ export class MovieRepository {
 
   async delete(id: number): Promise<boolean> {
     if (isMock()) {
-      const index = moviesMock.findIndex((m) => m.id === id);
+      const index = moviesMock.findIndex((movie) => movie.id === id);
 
       if (index === -1) {
         return false;
