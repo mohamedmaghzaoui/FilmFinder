@@ -1,10 +1,16 @@
-import { MovieRepository } from './movieRepository';
+import { isMock } from "../../config/dataSource";
 
-import { MovieController } from './movieController';
-import { MovieService } from './MovieService';
+import { MovieRepository } from "./repositories/MovieRepository";
 
-const repo = new MovieRepository();
-const service = new MovieService(repo);
+import { MovieMockRepository } from "./repositories/MovieMockRepository";
+import { MovieService } from "./services/MovieService";
+import { MovieController } from "./controllers/MovieController";
+
+//2 options mock and real repository
+const repository = isMock() ? new MovieMockRepository() : new MovieRepository();
+
+const service = new MovieService(repository);
+
 const controller = new MovieController(service);
 
 export default controller;

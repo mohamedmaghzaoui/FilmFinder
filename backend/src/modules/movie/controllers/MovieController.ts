@@ -1,5 +1,5 @@
 import { createMovieSchema, updateMovieSchema } from "../schema/movieSchema";
-import { MovieService } from "./MovieService";
+import { MovieService } from "../services/MovieService";
 import { Request, Response } from "express";
 export class MovieController {
   constructor(private service: MovieService) {}
