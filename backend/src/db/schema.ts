@@ -1,56 +1,48 @@
-import {
-    sqliteTable,
-    integer,
-    text,
-    real
-} from "drizzle-orm/sqlite-core";
+import { sqliteTable, integer, text, real } from 'drizzle-orm/sqlite-core';
 
-export const movies = sqliteTable("movies", {
+export const movies = sqliteTable('movies', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
 
-    id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
 
-    title: text("title").notNull(),
+  genre: text('genre').notNull(),
 
-    genre: text("genre").notNull(),
+  duration: integer('duration').notNull(),
 
-    duration: integer("duration").notNull(),
+  rating: real('rating').notNull(),
 
-    rating: real("rating").notNull(),
+  releaseYear: integer('release_year').notNull(),
 
-    releaseYear: integer("release_year").notNull(),
-
-    description: text("description").notNull()
-
+  description: text('description').notNull(),
 });
 
+export const series = sqliteTable('series', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
 
-export const series = sqliteTable("series", {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
+  genre: text('genre').notNull(),
 
-    title: text("title").notNull(),
-    genre: text("genre").notNull(),
+  seasons: integer('seasons').notNull(),
+  episodes: integer('episodes').notNull(),
 
-    seasons: integer("seasons").notNull(),
-    episodes: integer("episodes").notNull(),
+  rating: real('rating').notNull(),
+  releaseYear: integer('release_year').notNull(),
 
-    rating: real("rating").notNull(),
-    releaseYear: integer("release_year").notNull(),
-
-    description: text("description").notNull(),
+  description: text('description').notNull(),
 });
 
-export const anime = sqliteTable("anime", {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+export const anime = sqliteTable('anime', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
 
-    title: text("title").notNull(),
-    genre: text("genre").notNull(),
+  title: text('title').notNull(),
+  genre: text('genre').notNull(),
 
-    episodes: integer("episodes").notNull(),
+  episodes: integer('episodes').notNull(),
 
-    rating: real("rating").notNull(),
-    releaseYear: integer("release_year").notNull(),
+  rating: real('rating').notNull(),
+  releaseYear: integer('release_year').notNull(),
 
-    status: text("status").notNull(), // "ongoing" | "finished"
+  status: text('status').notNull(), // "ongoing" | "finished"
 
-    description: text("description").notNull(),
+  description: text('description').notNull(),
 });

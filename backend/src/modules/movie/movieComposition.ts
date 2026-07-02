@@ -1,7 +1,7 @@
-import { MovieRepository } from "./movieRepository";
+import { MovieRepository } from './movieRepository';
 
-import { MovieController } from "./movieController";
-import { MovieService } from "./MovieService";
+import { MovieController } from './movieController';
+import { MovieService } from './MovieService';
 
 const repo = new MovieRepository();
 const service = new MovieService(repo);

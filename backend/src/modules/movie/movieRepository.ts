@@ -1,117 +1,88 @@
-import { eq } from "drizzle-orm";
+import { eq } from 'drizzle-orm';
 
-import { db, movies } from "../../db";
+import { db, movies } from '../../db';
 
-import {  isMock } from "../../config/dataSource";
+import { isMock } from '../../config/dataSource';
 
-import { moviesMock } from "./mocks/movies";
+import { moviesMock } from './mocks/movies';
 
-import {
-    Movie,
-    MovieRequest,
-    MovieUpdateRequest
-} from "./types/movies";
+import { Movie, MovieRequest, MovieUpdateRequest } from './types/movies';
 
 export class MovieRepository {
-
-    async findAll(): Promise<Movie[]> {
-
-        if (isMock()) {
-            return moviesMock;
-        }
-
-        return db.select().from(movies);
+  async findAll(): Promise<Movie[]> {
+    if (isMock()) {
+      return moviesMock;
     }
 
-    async findById(id: number): Promise<Movie | null> {
+    return db.select().from(movies);
+  }
 
-        if (  isMock()  ) {
-            return moviesMock.find(movie => movie.id === id) ?? null;
-        }
-
-        const result = await db
-            .select()
-            .from(movies)
-            .where(eq(movies.id, id));
-
-        return result[0] ?? null;
+  async findById(id: number): Promise<Movie | null> {
+    if (isMock()) {
+      return moviesMock.find((movie) => movie.id === id) ?? null;
     }
 
-    async create(movie: MovieRequest): Promise<Movie> {
+    const result = await db.select().from(movies).where(eq(movies.id, id));
 
-        if (isMock()) {
+    return result[0] ?? null;
+  }
 
-            const newMovie: Movie = {
+  async create(movie: MovieRequest): Promise<Movie> {
+    if (isMock()) {
+      const newMovie: Movie = {
+        id: moviesMock.length + 1,
 
-                id: moviesMock.length + 1,
+        ...movie,
+      };
 
-                ...movie
-            };
+      moviesMock.push(newMovie);
 
-            moviesMock.push(newMovie);
-
-            return newMovie;
-        }
-
-        await db.insert(movies).values(movie);
-
-        const result = await db
-            .select()
-            .from(movies)
-            .orderBy(movies.id);
-
-        return result[result.length - 1];
+      return newMovie;
     }
 
-    async update(
-        id: number,
-        movie: MovieUpdateRequest
-    ): Promise<Movie | null> {
+    await db.insert(movies).values(movie);
 
-        if (isMock()) {
+    const result = await db.select().from(movies).orderBy(movies.id);
 
-            const index = moviesMock.findIndex(m => m.id === id);
+    return result[result.length - 1];
+  }
 
-            if (index === -1) {
-                return null;
-            }
+  async update(id: number, movie: MovieUpdateRequest): Promise<Movie | null> {
+    if (isMock()) {
+      const index = moviesMock.findIndex((m) => m.id === id);
 
-            moviesMock[index] = {
-                ...moviesMock[index],
-                ...movie
-            };
+      if (index === -1) {
+        return null;
+      }
 
-            return moviesMock[index];
-        }
+      moviesMock[index] = {
+        ...moviesMock[index],
+        ...movie,
+      };
 
-        await db
-            .update(movies)
-            .set(movie)
-            .where(eq(movies.id, id));
-
-        return this.findById(id);
+      return moviesMock[index];
     }
 
-    async delete(id: number): Promise<boolean> {
+    await db.update(movies).set(movie).where(eq(movies.id, id));
 
-        if (isMock()) {
+    return this.findById(id);
+  }
 
-            const index = moviesMock.findIndex(m => m.id === id);
+  async delete(id: number): Promise<boolean> {
+    if (isMock()) {
+      const index = moviesMock.findIndex((m) => m.id === id);
 
-            if (index === -1) {
-                return false;
-            }
+      if (index === -1) {
+        return false;
+      }
 
-            moviesMock.splice(index, 1);
+      moviesMock.splice(index, 1);
 
-            return true;
-        }
-
-        await db
-            .delete(movies)
-            .where(eq(movies.id, id));
-
-        return true;
+      return true;
     }
 
+    await db.delete(movies).where(eq(movies.id, id));
+
+    return true;
+  }
 }

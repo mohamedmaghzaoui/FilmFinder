@@ -1,5 +1,5 @@
-import { MovieRepository } from "./movieRepository";
-import { MovieRequest, MovieUpdateRequest } from "./types/movies";
+import { MovieRepository } from './movieRepository';
+import { MovieRequest, MovieUpdateRequest } from './types/movies';
 
 export class MovieService {
   constructor(private repo: MovieRepository) {}
@@ -12,7 +12,7 @@ export class MovieService {
     const movie = await this.repo.findById(id);
 
     if (!movie) {
-      throw new Error("Movie not found");
+      throw new Error('Movie not found');
     }
 
     return movie;
@@ -26,7 +26,7 @@ export class MovieService {
     const updated = await this.repo.update(id, movie);
 
     if (!updated) {
-      throw new Error("Movie not found");
+      throw new Error('Movie not found');
     }
 
     return updated;
@@ -36,7 +36,7 @@ export class MovieService {
     const deleted = await this.repo.delete(id);
 
     if (!deleted) {
-      throw new Error("Movie not found");
+      throw new Error('Movie not found');
     }
 
     return { success: true };

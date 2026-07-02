@@ -1,21 +1,19 @@
-
-import { MovieService } from "./MovieService";
-import { MovieRequest, MovieUpdateRequest } from "./types/movies";
-import { Request, Response } from "express";
+import { MovieService } from './MovieService';
+import { MovieRequest, MovieUpdateRequest } from './types/movies';
+import { Request, Response } from 'express';
 export class MovieController {
   constructor(private service: MovieService) {}
 
-  getAll = async (req:Request, res:Response) => {
+  getAll = async (req: Request, res: Response) => {
     try {
-      
       const movies = await this.service.getAllMovies();
       res.json(movies);
     } catch (err) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: 'Server error' });
     }
   };
 
-  getById = async (req:Request, res:Response) => {
+  getById = async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       const movie = await this.service.getMovieById(id);
@@ -25,7 +23,7 @@ export class MovieController {
     }
   };
 
-  create = async (req:Request, res:Response) => {
+  create = async (req: Request, res: Response) => {
     try {
       const data: MovieRequest = req.body;
       const movie = await this.service.createMovie(data);
@@ -35,7 +33,7 @@ export class MovieController {
     }
   };
 
-  update = async (req:Request, res:Response) => {
+  update = async (req: Request, res: Response) => {
     try {
       const data: MovieUpdateRequest = req.body;
       const id = Number(req.params.id);
@@ -46,11 +44,11 @@ export class MovieController {
     }
   };
 
-  delete = async (req:Request, res:Response) => {
+  delete = async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
       await this.service.deleteMovie(id);
-      res.json({ message: "Deleted successfully" });
+      res.json({ message: 'Deleted successfully' });
     } catch (err: any) {
       res.status(404).json({ message: err.message });
     }
