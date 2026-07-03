@@ -11,6 +11,6 @@ const repository = isMock()
 
 const service = new SeriesService(repository);
 
-const controller = new SeriesController(service);
+const seriesController = new SeriesController(service);
 
-export default controller;
+export default seriesController;

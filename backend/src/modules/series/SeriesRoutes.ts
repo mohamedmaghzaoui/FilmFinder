@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import controller from './SeriesComposition';
+import seriesController from './SeriesComposition';
 
 const router = Router();
 
-router.get('/', controller.getAll);
-router.get('/:id', controller.getById);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.delete);
+router.get('/', seriesController.getAll);
+router.get('/:id', seriesController.getById);
+router.post('/', seriesController.create);
+router.put('/:id', seriesController.update);
+router.delete('/:id', seriesController.delete);
 
 export default router;

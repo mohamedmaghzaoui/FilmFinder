@@ -8,6 +8,6 @@ const repository = isMock() ? new AnimeMockRepository() : new AnimeRepository();
 
 const service = new AnimeService(repository);
 
-const controller = new AnimeController(service);
+const animeController = new AnimeController(service);
 
-export default controller;
+export default animeController;
