@@ -1,9 +1,9 @@
-import { eq } from "drizzle-orm";
+import { eq } from 'drizzle-orm';
 
-import { db, movies } from "../../../db";
+import { db, movies } from '../../../db';
 
-import { IMovieRepository } from "./IMovieRepository";
-import { Movie, MovieRequest, MovieUpdateRequest } from "../types/Movies";
+import { IMovieRepository } from './IMovieRepository';
+import { Movie, MovieRequest, MovieUpdateRequest } from '../types/Movies';
 
 export class MovieRepository implements IMovieRepository {
   async findAll(): Promise<Movie[]> {
@@ -17,20 +17,28 @@ export class MovieRepository implements IMovieRepository {
   }
 
   async create(movie: MovieRequest): Promise<Movie> {
-    await db.insert(movies).values(movie);
+    const result = await db.insert(movies).values(movie);
+    const id = Number(result.lastInsertRowid);
+    const created = await this.findById(id);
 
-    const result = await db.select().from(movies).orderBy(movies.id);
+    if (!created) {
+      throw new Error('Failed to create movie');
+    }
 
-    return result[result.length - 1];
+    return created;
   }
 
   async update(id: number, movie: MovieUpdateRequest): Promise<Movie | null> {
+    const existing = await this.findById(id);
+    if (!existing) return null;
     await db.update(movies).set(movie).where(eq(movies.id, id));
 
     return this.findById(id);
   }
 
   async delete(id: number): Promise<boolean> {
+    const existing = await this.findById(id);
+    if (!existing) return false;
     await db.delete(movies).where(eq(movies.id, id));
 
     return true;
