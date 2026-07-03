@@ -1,8 +1,8 @@
-import { IMovieRepository } from "./IMovieRepository";
+import { IMovieRepository } from './IMovieRepository';
 
-import { Movie, MovieRequest, MovieUpdateRequest } from "../types/Movies";
+import { Movie, MovieRequest, MovieUpdateRequest } from '../types/Movies';
 
-import { moviesMock } from "../mocks/movies";
+import { moviesMock } from '../mocks/Movies';
 
 export class MovieMockRepository implements IMovieRepository {
   async findAll(): Promise<Movie[]> {

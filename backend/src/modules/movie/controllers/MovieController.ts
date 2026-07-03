@@ -1,6 +1,6 @@
-import { createMovieSchema, updateMovieSchema } from "../schema/movieSchema";
-import { MovieService } from "../services/MovieService";
-import { Request, Response } from "express";
+import { createMovieSchema, updateMovieSchema } from '../schema/MovieSchema';
+import { MovieService } from '../services/MovieService';
+import { Request, Response } from 'express';
 export class MovieController {
   constructor(private service: MovieService) {}
 
@@ -9,7 +9,7 @@ export class MovieController {
       const movies = await this.service.getAllMovies();
       res.json(movies);
     } catch (err) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: 'Server error' });
     }
   };
 
@@ -29,7 +29,7 @@ export class MovieController {
 
       if (!result.success) {
         return res.status(400).json({
-          message: "Invalid data",
+          message: 'Invalid data',
           errors: result.error.flatten(),
         });
       }
@@ -38,7 +38,7 @@ export class MovieController {
 
       res.status(201).json(movie);
     } catch (err: any) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: 'Server error' });
     }
   };
 
@@ -50,7 +50,7 @@ export class MovieController {
 
       if (!result.success) {
         return res.status(400).json({
-          message: "Invalid data",
+          message: 'Invalid data',
           errors: result.error.flatten(),
         });
       }
@@ -67,7 +67,7 @@ export class MovieController {
     try {
       const id = Number(req.params.id);
       await this.service.deleteMovie(id);
-      res.json({ message: "Deleted successfully" });
+      res.json({ message: 'Deleted successfully' });
     } catch (err: any) {
       res.status(404).json({ message: err.message });
     }

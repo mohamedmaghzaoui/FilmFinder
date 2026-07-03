@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import controller from './AnimeComposition';
+import controller from './SeriesComposition';
 
 const router = Router();
 
