@@ -7,10 +7,12 @@ import { MovieService } from './services/MovieService';
 import { MovieController } from './controllers/MovieController';
 
 //2 options mock and real repository
-const repository = isMock() ? new MovieMockRepository() : new MovieRepository();
+const movieRepository = isMock()
+  ? new MovieMockRepository()
+  : new MovieRepository();
 
-const service = new MovieService(repository);
+const movieService = new MovieService(movieRepository);
 
-const movieController = new MovieController(service);
+const movieController = new MovieController(movieService);
 
 export default movieController;
