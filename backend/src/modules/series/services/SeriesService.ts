@@ -2,14 +2,14 @@ import { ISeriesRepository } from '../repositories/ISerieRepository';
 import { SeriesRequest, SeriesUpdateRequest } from '../types/Series';
 
 export class SeriesService {
-  constructor(private repo: ISeriesRepository) {}
+  constructor(private seriesRepository: ISeriesRepository) {}
 
   getAllSeries() {
-    return this.repo.findAll();
+    return this.seriesRepository.findAll();
   }
 
   async getSeriesById(id: number) {
-    const series = await this.repo.findById(id);
+    const series = await this.seriesRepository.findById(id);
 
     if (!series) {
       throw new Error('Series not found');
@@ -19,11 +19,11 @@ export class SeriesService {
   }
 
   createSeries(data: SeriesRequest) {
-    return this.repo.create(data);
+    return this.seriesRepository.create(data);
   }
 
   async updateSeries(id: number, data: SeriesUpdateRequest) {
-    const updated = await this.repo.update(id, data);
+    const updated = await this.seriesRepository.update(id, data);
 
     if (!updated) {
       throw new Error('Series not found');
@@ -33,7 +33,7 @@ export class SeriesService {
   }
 
   async deleteSeries(id: number) {
-    const deleted = await this.repo.delete(id);
+    const deleted = await this.seriesRepository.delete(id);
 
     if (!deleted) {
       throw new Error('Series not found');

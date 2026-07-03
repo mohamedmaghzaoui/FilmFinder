@@ -5,12 +5,12 @@ import { SeriesRepository } from './repositories/SeriesRepository';
 import { SeriesService } from './services/SeriesService';
 
 //2 options mock and real repository
-const repository = isMock()
+const seriesRepository = isMock()
   ? new SeriesMockRepository()
   : new SeriesRepository();
 
-const service = new SeriesService(repository);
+const seriesService = new SeriesService(seriesRepository);
 
-const seriesController = new SeriesController(service);
+const seriesController = new SeriesController(seriesService);
 
 export default seriesController;

@@ -3,11 +3,11 @@ import { SeriesService } from '../services/SeriesService';
 import { createSeriesSchema, updateSeriesSchema } from '../schema/SeriesSchema';
 
 export class SeriesController {
-  constructor(private service: SeriesService) {}
+  constructor(private seriesService: SeriesService) {}
 
   getAll = async (req: Request, res: Response) => {
     try {
-      const data = await this.service.getAllSeries();
+      const data = await this.seriesService.getAllSeries();
       res.json(data);
     } catch {
       res.status(500).json({ message: 'Server error' });
@@ -17,7 +17,7 @@ export class SeriesController {
   getById = async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
-      const data = await this.service.getSeriesById(id);
+      const data = await this.seriesService.getSeriesById(id);
       res.json(data);
     } catch (err: any) {
       res.status(404).json({ message: err.message });
@@ -35,7 +35,7 @@ export class SeriesController {
         });
       }
 
-      const data = await this.service.createSeries(result.data);
+      const data = await this.seriesService.createSeries(result.data);
 
       res.status(201).json(data);
     } catch {
@@ -56,7 +56,7 @@ export class SeriesController {
         });
       }
 
-      const data = await this.service.updateSeries(id, result.data);
+      const data = await this.seriesService.updateSeries(id, result.data);
 
       res.json(data);
     } catch (err: any) {
@@ -68,7 +68,7 @@ export class SeriesController {
     try {
       const id = Number(req.params.id);
 
-      await this.service.deleteSeries(id);
+      await this.seriesService.deleteSeries(id);
 
       res.json({ message: 'Deleted successfully' });
     } catch (err: any) {
