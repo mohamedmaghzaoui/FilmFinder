@@ -1,23 +1,23 @@
-import { Request, Response } from "express";
-import { AnimeService } from "../services/AnimeService";
-import { createAnimeSchema, updateAnimeSchema } from "../schema/animeSchema";
+import { Request, Response } from 'express';
+import { AnimeService } from '../services/AnimeService';
+import { createAnimeSchema, updateAnimeSchema } from '../schema/animeSchema';
 
 export class AnimeController {
-  constructor(private service: AnimeService) {}
+  constructor(private animeService: AnimeService) {}
 
   getAll = async (req: Request, res: Response) => {
     try {
-      const anime = await this.service.getAllAnime();
+      const anime = await this.animeService.getAllAnime();
       res.json(anime);
     } catch {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: 'Server error' });
     }
   };
 
   getById = async (req: Request, res: Response) => {
     try {
       const id = Number(req.params.id);
-      const anime = await this.service.getAnimeById(id);
+      const anime = await this.animeService.getAnimeById(id);
       res.json(anime);
     } catch (err: any) {
       res.status(404).json({ message: err.message });
@@ -30,16 +30,16 @@ export class AnimeController {
 
       if (!result.success) {
         return res.status(400).json({
-          message: "Invalid data",
+          message: 'Invalid data',
           errors: result.error.flatten(),
         });
       }
 
-      const anime = await this.service.createAnime(result.data);
+      const anime = await this.animeService.createAnime(result.data);
 
       res.status(201).json(anime);
     } catch {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: 'Server error' });
     }
   };
 
@@ -51,12 +51,12 @@ export class AnimeController {
 
       if (!result.success) {
         return res.status(400).json({
-          message: "Invalid data",
+          message: 'Invalid data',
           errors: result.error.flatten(),
         });
       }
 
-      const anime = await this.service.updateAnime(id, result.data);
+      const anime = await this.animeService.updateAnime(id, result.data);
 
       res.json(anime);
     } catch (err: any) {
@@ -68,9 +68,9 @@ export class AnimeController {
     try {
       const id = Number(req.params.id);
 
-      await this.service.deleteAnime(id);
+      await this.animeService.deleteAnime(id);
 
-      res.json({ message: "Deleted successfully" });
+      res.json({ message: 'Deleted successfully' });
     } catch (err: any) {
       res.status(404).json({ message: err.message });
     }
