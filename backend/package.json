@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "cross-env DATA_SOURCE=db ts-node-dev src/server.ts",
+    "mock": "cross-env DATA_SOURCE=mock ts-node-dev src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write ."
   },
@@ -14,6 +15,7 @@
   "dependencies": {
     "better-sqlite3": "^12.11.1",
     "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "express": "^5.2.1",
