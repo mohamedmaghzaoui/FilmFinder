@@ -15,6 +15,13 @@
       "when": 1783001590264,
       "tag": "0001_purple_peter_quill",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1784627642455,
+      "tag": "0002_parched_sheva_callister",
+      "breakpoints": true
     }
   ]
 }

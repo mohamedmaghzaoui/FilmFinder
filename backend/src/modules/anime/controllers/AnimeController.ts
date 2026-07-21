@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AnimeService } from '../services/AnimeService';
-import { createAnimeSchema, updateAnimeSchema } from '../schema/animeSchema';
+import { createAnimeSchema, updateAnimeSchema } from '../schema/AnimeSchema';
 
 export class AnimeController {
   constructor(private animeService: AnimeService) {}
