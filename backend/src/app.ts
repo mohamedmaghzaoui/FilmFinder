@@ -4,9 +4,9 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger/swagger';
 
-import movieRoutes from './modules/movie/MovieRoutes';
-import animeRoutes from './modules/anime/AnimeRoutes';
-import seriesRoutes from './modules/series/SeriesRoutes';
+import movieRoutes from './routes/MovieRoutes';
+import animeRoutes from './routes/AnimeRoutes';
+import seriesRoutes from './routes/SeriesRoutes';
 
 const app = express();
 
