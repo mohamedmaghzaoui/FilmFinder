@@ -1,11 +1,13 @@
-import { isMock } from '../config/dataSource';
+import { AppConfig } from '../config/AppConfig';
+
 import { MovieController } from '../controllers/MovieController';
 import { MovieMockRepository } from '../repositories/movie/MovieMockRepository';
 import { MovieRepository } from '../repositories/movie/MovieRepository';
 import { MovieService } from '../services/MovieService';
 
+const config = AppConfig.getInstance();
 //2 options mock and real repository
-const movieRepository = isMock()
+const movieRepository = config.isMock()
   ? new MovieMockRepository()
   : new MovieRepository();
 
