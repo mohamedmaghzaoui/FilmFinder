@@ -26,4 +26,26 @@ export const movieApi = {
     const { data } = await api.delete(`/movies/${id}`);
     return data;
   },
+
+  searchMovies: async (filters: any) => {
+    const { sort, ...params } = filters;
+
+    const { data } = await api.get('/recommendations/movie/search', {
+      params: {
+        ...params,
+        sort,
+      },
+    });
+
+    return data;
+  },
+
+  recommendMovies: async (favorites: any[], filters: any = {}) => {
+    const { data } = await api.post('/recommendations/movie/score', {
+      favorites,
+      filters,
+    });
+
+    return data;
+  },
 };
