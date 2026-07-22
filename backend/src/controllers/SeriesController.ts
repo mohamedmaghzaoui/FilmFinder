@@ -20,7 +20,7 @@ export class SeriesController {
       const data = await this.seriesService.getSeriesById(id);
       res.json(data);
     } catch (err: any) {
-      res.status(404).json({ message: err.message });
+      res.status(404).json({ message: 'serie not found' });
     }
   };
 
@@ -60,7 +60,7 @@ export class SeriesController {
 
       res.json(data);
     } catch (err: any) {
-      res.status(404).json({ message: err.message });
+      res.status(404).json({ message: 'serie not found' });
     }
   };
 
@@ -72,7 +72,7 @@ export class SeriesController {
 
       res.json({ message: 'Deleted successfully' });
     } catch (err: any) {
-      res.status(404).json({ message: err.message });
+      res.status(404).json({ message: 'serie not found' });
     }
   };
 }

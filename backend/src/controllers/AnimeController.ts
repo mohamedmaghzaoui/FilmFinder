@@ -20,7 +20,7 @@ export class AnimeController {
       const anime = await this.animeService.getAnimeById(id);
       res.json(anime);
     } catch (err: any) {
-      res.status(404).json({ message: err.message });
+      res.status(404).json({ message: 'Anime not found' });
     }
   };
 
@@ -60,7 +60,7 @@ export class AnimeController {
 
       res.json(anime);
     } catch (err: any) {
-      res.status(404).json({ message: err.message });
+      res.status(404).json({ message: 'Anime not found' });
     }
   };
 
@@ -72,7 +72,7 @@ export class AnimeController {
 
       res.json({ message: 'Deleted successfully' });
     } catch (err: any) {
-      res.status(404).json({ message: err.message });
+      res.status(404).json({ message: 'Anime not found' });
     }
   };
 }
