@@ -4,19 +4,27 @@ import { Movie } from '../../../types/Movie';
 export class MovieBarycenterStrategy implements ScoringStrategy<Movie> {
   score(item: Movie, favorites: Movie[]) {
     const profile = {
-      actionIntensity: this.normalize(this.avg(favorites, 'actionIntensity')),
-      storyDepth: this.normalize(this.avg(favorites, 'storyDepth')),
-      visualQuality: this.normalize(this.avg(favorites, 'visualQuality')),
-      emotionLevel: this.normalize(this.avg(favorites, 'emotionLevel')),
-      suspenseLevel: this.normalize(this.avg(favorites, 'suspenseLevel')),
+      actionIntensity: this.normalize(
+        this.avg(favorites, 'actionIntensity'),
+        0,
+        100,
+      ),
+      storyDepth: this.normalize(this.avg(favorites, 'storyDepth'), 0, 10),
+      visualQuality: this.normalize(this.avg(favorites, 'visualQuality'), 0, 5),
+      emotionLevel: this.normalize(this.avg(favorites, 'emotionLevel'), 0, 100),
+      suspenseLevel: this.normalize(
+        this.avg(favorites, 'suspenseLevel'),
+        0,
+        10,
+      ),
     };
 
     const normalizedMovie = {
-      actionIntensity: this.normalize(Number(item.actionIntensity)),
-      storyDepth: this.normalize(Number(item.storyDepth)),
-      visualQuality: this.normalize(Number(item.visualQuality)),
-      emotionLevel: this.normalize(Number(item.emotionLevel)),
-      suspenseLevel: this.normalize(Number(item.suspenseLevel)),
+      actionIntensity: this.normalize(Number(item.actionIntensity), 0, 100),
+      storyDepth: this.normalize(Number(item.storyDepth), 0, 10),
+      visualQuality: this.normalize(Number(item.visualQuality), 0, 5),
+      emotionLevel: this.normalize(Number(item.emotionLevel), 0, 100),
+      suspenseLevel: this.normalize(Number(item.suspenseLevel), 0, 10),
     };
 
     const distance = Math.sqrt(
@@ -36,7 +44,7 @@ export class MovieBarycenterStrategy implements ScoringStrategy<Movie> {
     );
   }
 
-  private normalize(value: number): number {
-    return value / 10;
+  private normalize(value: number, min: number, max: number): number {
+    return (value - min) / (max - min);
   }
 }

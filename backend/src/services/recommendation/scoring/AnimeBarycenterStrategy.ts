@@ -4,27 +4,39 @@ import { Anime } from '../../../types/Anime';
 export class AnimeBarycenterStrategy implements ScoringStrategy<Anime> {
   score(item: Anime, favorites: Anime[]) {
     const profile = {
-      fightIntensity: this.normalize(this.avg(favorites, 'fightIntensity')),
-      worldBuilding: this.normalize(this.avg(favorites, 'worldBuilding')),
-      animationQuality: this.normalize(this.avg(favorites, 'animationQuality')),
-      emotionLevel: this.normalize(this.avg(favorites, 'emotionLevel')),
-      fantasyLevel: this.normalize(this.avg(favorites, 'fantasyLevel')),
+      fightIntensity: this.normalize(
+        this.avg(favorites, 'fightIntensity'),
+        0,
+        100,
+      ),
+      worldBuilding: this.normalize(
+        this.avg(favorites, 'worldBuilding'),
+        0,
+        10,
+      ),
+      animationQuality: this.normalize(
+        this.avg(favorites, 'animationQuality'),
+        0,
+        5,
+      ),
+      emotionLevel: this.normalize(this.avg(favorites, 'emotionLevel'), 0, 10),
+      fantasyLevel: this.normalize(this.avg(favorites, 'fantasyLevel'), 0, 100),
     };
 
-    const normalizedMovie = {
-      fightIntensity: this.normalize(Number(item.fightIntensity)),
-      worldBuilding: this.normalize(Number(item.worldBuilding)),
-      animationQuality: this.normalize(Number(item.animationQuality)),
-      emotionLevel: this.normalize(Number(item.emotionLevel)),
-      fantasyLevel: this.normalize(Number(item.fantasyLevel)),
+    const normalizedAnime = {
+      fightIntensity: this.normalize(Number(item.fightIntensity), 0, 100),
+      worldBuilding: this.normalize(Number(item.worldBuilding), 0, 10),
+      animationQuality: this.normalize(Number(item.animationQuality), 0, 5),
+      emotionLevel: this.normalize(Number(item.emotionLevel), 0, 10),
+      fantasyLevel: this.normalize(Number(item.fantasyLevel), 0, 100),
     };
 
     const distance = Math.sqrt(
-      (normalizedMovie.fightIntensity - profile.fightIntensity) ** 2 +
-        (normalizedMovie.worldBuilding - profile.worldBuilding) ** 2 +
-        (normalizedMovie.animationQuality - profile.animationQuality) ** 2 +
-        (normalizedMovie.emotionLevel - profile.emotionLevel) ** 2 +
-        (normalizedMovie.fantasyLevel - profile.fantasyLevel) ** 2,
+      (normalizedAnime.fightIntensity - profile.fightIntensity) ** 2 +
+        (normalizedAnime.worldBuilding - profile.worldBuilding) ** 2 +
+        (normalizedAnime.animationQuality - profile.animationQuality) ** 2 +
+        (normalizedAnime.emotionLevel - profile.emotionLevel) ** 2 +
+        (normalizedAnime.fantasyLevel - profile.fantasyLevel) ** 2,
     );
 
     return 1 / (1 + distance);
@@ -36,7 +48,7 @@ export class AnimeBarycenterStrategy implements ScoringStrategy<Anime> {
     );
   }
 
-  private normalize(value: number): number {
-    return value / 10;
+  private normalize(value: number, min: number, max: number): number {
+    return (value - min) / (max - min);
   }
 }

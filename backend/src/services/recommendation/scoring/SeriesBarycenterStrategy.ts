@@ -6,28 +6,42 @@ export class SeriesBarycenterStrategy implements ScoringStrategy<Series> {
     const profile = {
       characterDevelopment: this.normalize(
         this.avg(favorites, 'characterDevelopment'),
+        0,
+        10,
       ),
-      storyComplexity: this.normalize(this.avg(favorites, 'storyComplexity')),
-      episodeAddiction: this.normalize(this.avg(favorites, 'episodeAddiction')),
-      dramaLevel: this.normalize(this.avg(favorites, 'dramaLevel')),
-      humorLevel: this.normalize(this.avg(favorites, 'humorLevel')),
+      storyComplexity: this.normalize(
+        this.avg(favorites, 'storyComplexity'),
+        0,
+        5,
+      ),
+      episodeAddiction: this.normalize(
+        this.avg(favorites, 'episodeAddiction'),
+        0,
+        100,
+      ),
+      dramaLevel: this.normalize(this.avg(favorites, 'dramaLevel'), 0, 10),
+      humorLevel: this.normalize(this.avg(favorites, 'humorLevel'), 0, 5),
     };
 
-    const normalizedMovie = {
-      characterDevelopment: this.normalize(Number(item.characterDevelopment)),
-      storyComplexity: this.normalize(Number(item.storyComplexity)),
-      episodeAddiction: this.normalize(Number(item.episodeAddiction)),
-      dramaLevel: this.normalize(Number(item.dramaLevel)),
-      humorLevel: this.normalize(Number(item.humorLevel)),
+    const normalizedSeries = {
+      characterDevelopment: this.normalize(
+        Number(item.characterDevelopment),
+        0,
+        10,
+      ),
+      storyComplexity: this.normalize(Number(item.storyComplexity), 0, 5),
+      episodeAddiction: this.normalize(Number(item.episodeAddiction), 0, 100),
+      dramaLevel: this.normalize(Number(item.dramaLevel), 0, 10),
+      humorLevel: this.normalize(Number(item.humorLevel), 0, 5),
     };
 
     const distance = Math.sqrt(
-      (normalizedMovie.characterDevelopment - profile.characterDevelopment) **
+      (normalizedSeries.characterDevelopment - profile.characterDevelopment) **
         2 +
-        (normalizedMovie.storyComplexity - profile.storyComplexity) ** 2 +
-        (normalizedMovie.episodeAddiction - profile.episodeAddiction) ** 2 +
-        (normalizedMovie.dramaLevel - profile.dramaLevel) ** 2 +
-        (normalizedMovie.humorLevel - profile.humorLevel) ** 2,
+        (normalizedSeries.storyComplexity - profile.storyComplexity) ** 2 +
+        (normalizedSeries.episodeAddiction - profile.episodeAddiction) ** 2 +
+        (normalizedSeries.dramaLevel - profile.dramaLevel) ** 2 +
+        (normalizedSeries.humorLevel - profile.humorLevel) ** 2,
     );
 
     return 1 / (1 + distance);
@@ -39,7 +53,7 @@ export class SeriesBarycenterStrategy implements ScoringStrategy<Series> {
     );
   }
 
-  private normalize(value: number): number {
-    return value / 10;
+  private normalize(value: number, min: number, max: number): number {
+    return (value - min) / (max - min);
   }
 }
