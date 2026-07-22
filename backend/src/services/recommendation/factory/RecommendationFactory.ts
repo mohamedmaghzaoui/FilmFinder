@@ -35,7 +35,7 @@ export class RecommendationFactory {
         throw new Error('Invalid recommendation type');
     }
 
-    const decoratedScoringStrategy = new LoggingScoringDecorator(
+    const scoringStrategyWithLogging = new LoggingScoringDecorator(
       scoringStrategy,
     );
 
@@ -48,7 +48,7 @@ export class RecommendationFactory {
     return new RecommendationService(
       repository,
       filterStrategy,
-      decoratedScoringStrategy,
+      scoringStrategyWithLogging,
       sortStrategies,
     );
   }

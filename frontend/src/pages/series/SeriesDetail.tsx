@@ -1,44 +1,113 @@
-import { useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useSeriesItem } from '../../hooks/series/useSeriesItem';
 
 export default function SeriesDetail() {
   const { id } = useParams();
-  const { data, isLoading } = useSeriesItem(Number(id));
+
+  const navigate = useNavigate();
+
+  const { data: series, isLoading } = useSeriesItem(Number(id));
 
   if (isLoading) {
-    return <p className="section">Loading series...</p>;
+    return (
+      <section className="section">
+        <p>Loading series...</p>
+      </section>
+    );
+  }
+
+  if (!series) {
+    return (
+      <section className="section">
+        <p>Series not found 😢</p>
+      </section>
+    );
   }
 
   return (
     <section className="section">
       <div className="container">
-        <Link to="/series" className="button is-small mb-4">
-          ← Back
-        </Link>
+        <button
+          className="button is-light mb-5"
 
-        <h1 className="title">{data?.title}</h1>
+          onClick={() => navigate(-1)}
+        >
+          ← Back to series
+        </button>
 
-        <div className="box">
-          <p>
-            <strong>Genre:</strong> {data?.genre}
-          </p>
-          <p>
-            <strong>Seasons:</strong> {data?.seasons}
-          </p>
-          <p>
-            <strong>Episodes:</strong> {data?.episodes}
-          </p>
-          <p>
-            <strong>Year:</strong> {data?.releaseYear}
-          </p>
-          <p>
-            <strong>Rating:</strong> ⭐ {data?.rating}
-          </p>
+        <div className="card">
+          <header className="card-header has-background-dark">
+            <div className="card-header-title">
+              <div>
+                <h1 className="title has-text-white">{series.title}</h1>
 
-          <hr />
+                <p className="has-text-white">
+                  📺 {series.genre}
+                  {' • '}
+                  📅 {series.releaseYear}
+                </p>
+              </div>
+            </div>
+          </header>
 
-          <p>{data?.description}</p>
+          <div className="card-content">
+            <h2 className="subtitle">About this series</h2>
+
+            <p className="mb-5">{series.description}</p>
+
+            <div className="columns">
+              <div className="column">
+                <div className="box has-text-centered">
+                  <span className="is-size-3">🎬</span>
+
+                  <p className="has-text-weight-bold">Seasons</p>
+
+                  <p>{series.seasons}</p>
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="box has-text-centered">
+                  <span className="is-size-3">📺</span>
+
+                  <p className="has-text-weight-bold">Episodes</p>
+
+                  <p>{series.episodes}</p>
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="box has-text-centered">
+                  <span className="is-size-3">⭐</span>
+
+                  <p className="has-text-weight-bold">Rating</p>
+
+                  <p>{series.rating}/10</p>
+                </div>
+              </div>
+
+              <div className="column">
+                <div className="box has-text-centered">
+                  <span className="is-size-3">📅</span>
+
+                  <p className="has-text-weight-bold">Release</p>
+
+                  <p>{series.releaseYear}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <footer className="card-footer">
+            <button
+              className="card-footer-item"
+
+              onClick={() => navigate('/series')}
+            >
+              📺 Back to series
+            </button>
+          </footer>
         </div>
       </div>
     </section>

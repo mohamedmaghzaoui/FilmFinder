@@ -11,4 +11,26 @@ export const seriesApi = {
     const { data } = await api.get(`/series/${id}`);
     return data;
   },
+
+  searchSeries: async (filters: any) => {
+    const { sort, ...params } = filters;
+
+    const { data } = await api.get('/recommendations/series/search', {
+      params: {
+        ...params,
+        sort,
+      },
+    });
+
+    return data;
+  },
+
+  recommendSeries: async (favorites: any[], filters: any = {}) => {
+    const { data } = await api.post('/recommendations/series/score', {
+      favorites,
+      filters,
+    });
+
+    return data;
+  },
 };

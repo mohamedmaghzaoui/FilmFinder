@@ -2,11 +2,14 @@ import { useState } from 'react';
 
 import { useMovies } from '../../hooks/movie/useMovies';
 
-import { favoriteStorage } from '../../utils/favorites';
 import { useMovieSearch } from '../../hooks/movie/useMovieSearch';
 import { useMovieRecommendation } from '../../hooks/movie/useMovieRecommendation';
+import type { Movie } from '../../types/Movie';
+import { useNavigate } from 'react-router-dom';
+import { movieFavoriteStorage } from '../../utils/favorites.ts';
 
 export default function MoviesList() {
+  const navigate = useNavigate();
   const { data: allMovies = [], isLoading: moviesLoading } = useMovies();
 
   const searchMutation = useMovieSearch();
@@ -22,7 +25,7 @@ export default function MoviesList() {
     sort: '',
   });
 
-  const [favorites, setFavorites] = useState(favoriteStorage.getIds());
+  const [favorites, setFavorites] = useState(movieFavoriteStorage.getIds());
 
   if (moviesLoading) {
     return (
@@ -65,16 +68,16 @@ export default function MoviesList() {
   }
 
   function toggleFavorite(id: number) {
-    if (favoriteStorage.isFavorite(id)) {
-      favoriteStorage.remove(id);
+    if (movieFavoriteStorage.isFavorite(id)) {
+      movieFavoriteStorage.remove(id);
     } else {
-      favoriteStorage.add(id);
+      movieFavoriteStorage.add(id);
     }
 
-    setFavorites(favoriteStorage.getIds());
+    setFavorites(movieFavoriteStorage.getIds());
   }
 
-  let displayedMovies = [];
+  let displayedMovies: Movie[] = [];
 
   if (view === 'all') displayedMovies = allMovies;
 
@@ -145,7 +148,7 @@ export default function MoviesList() {
             </select>
 
             <button
-              className="button is-info mt-3"
+              className="button mx-6 is-info "
 
               onClick={applyFilters}
             >
@@ -210,13 +213,21 @@ ${liked ? 'has-background-success-light' : ''}`}
                   </div>
 
                   <footer className="card-footer">
-                    <button
-                      className="card-footer-item"
+                    <footer className="card-footer">
+                      <button
+                        className="card-footer-item"
+                        onClick={() => toggleFavorite(movie.id)}
+                      >
+                        {liked ? '💔 Remove' : '❤️ Like'}
+                      </button>
 
-                      onClick={() => toggleFavorite(movie.id)}
-                    >
-                      {liked ? '💔 Remove' : '❤️ Like'}
-                    </button>
+                      <button
+                        className="card-footer-item"
+                        onClick={() => navigate(`/movies/${movie.id}`)}
+                      >
+                        🔎 Details
+                      </button>
+                    </footer>
                   </footer>
                 </div>
               </div>
