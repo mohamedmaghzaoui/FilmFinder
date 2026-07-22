@@ -3,6 +3,7 @@ import { RecommendationService } from '../RecommendationService';
 import { DefaultFilter } from '../filter/DefaultFilter';
 
 import { MovieBarycenterStrategy } from '../scoring/MovieBarycenterStrategy';
+// we can use this for barycentre instead of pondération
 import { AnimeBarycenterStrategy } from '../scoring/AnimeBarycenterStrategy';
 import { SeriesBarycenterStrategy } from '../scoring/SeriesBarycenterStrategy';
 
@@ -11,6 +12,7 @@ import { ReleaseYearSort } from '../sorting/ReleaseYearSort';
 import { ScoreSort } from '../sorting/ScoreSort';
 
 import { LoggingScoringDecorator } from '../decorator/LoggingScoringDecorator';
+import { MovieWeightedStrategy } from '../scoring/MovieWeightedStrategy';
 
 export class RecommendationFactory {
   static create(type: string, repository: any) {
@@ -20,7 +22,7 @@ export class RecommendationFactory {
 
     switch (type) {
       case 'movie':
-        scoringStrategy = new MovieBarycenterStrategy();
+        scoringStrategy = new MovieWeightedStrategy();
         break;
 
       case 'anime':
