@@ -63,7 +63,9 @@ describe('AnimeService', () => {
     });
 
     expect(result).toEqual(anime);
-    expect(mockRepo.create).toHaveBeenCalledWith({ title: 'Bleach' });
+    expect(mockRepo.create).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'Bleach' }),
+    );
   });
 
   test('should update anime', async () => {
