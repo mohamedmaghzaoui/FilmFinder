@@ -1,5 +1,6 @@
 import { IAnimeRepository } from '../repositories/anime/IAnimeRepository';
 import { AnimeService } from '../services/AnimeService';
+import { Anime } from '../types/Anime';
 
 const mockRepo: jest.Mocked<IAnimeRepository> = {
   findAll: jest.fn(),
@@ -17,7 +18,8 @@ describe('AnimeService', () => {
   });
 
   test('should return all anime', async () => {
-    mockRepo.findAll.mockResolvedValue([{ id: 1, title: 'Naruto' } as any]);
+    const animeList: Anime[] = [{ id: 1, title: 'Naruto' } as Anime];
+    mockRepo.findAll.mockResolvedValue(animeList);
 
     const result = await service.getAllAnime();
 
@@ -26,7 +28,8 @@ describe('AnimeService', () => {
   });
 
   test('should return anime by id', async () => {
-    mockRepo.findById.mockResolvedValue({ id: 1, title: 'One Piece' } as any);
+    const anime: Anime = { id: 1, title: 'One Piece' } as Anime;
+    mockRepo.findById.mockResolvedValue(anime);
 
     const result = await service.getAnimeById(1);
 
@@ -41,19 +44,32 @@ describe('AnimeService', () => {
   });
 
   test('should create anime', async () => {
-    const anime = { id: 1, title: 'Bleach' };
-    mockRepo.create.mockResolvedValue(anime as any);
+    const anime: Anime = { id: 1, title: 'Bleach' } as Anime;
+    mockRepo.create.mockResolvedValue(anime);
 
-    const result = await service.createAnime({ title: 'Bleach' } as any);
+    const result = await service.createAnime({
+      title: 'Bleach',
+      genre: 'Action',
+      rating: 8,
+      releaseYear: 2000,
+      description: 'test',
+      episodes: 1,
+      status: 'ongoing',
+      emotionLevel: 1,
+      fightIntensity: 1,
+      worldBuilding: 1,
+      animationQuality: 1,
+      fantasyLevel: 1,
+    });
 
     expect(result).toEqual(anime);
     expect(mockRepo.create).toHaveBeenCalledWith({ title: 'Bleach' });
   });
 
   test('should update anime', async () => {
-    const updated = { id: 1, title: 'Bleach Updated' };
+    const updated: Anime = { id: 1, title: 'Bleach Updated' } as Anime;
 
-    mockRepo.update.mockResolvedValue(updated as any);
+    mockRepo.update.mockResolvedValue(updated);
 
     const result = await service.updateAnime(1, { title: 'Bleach Updated' });
 
@@ -63,7 +79,7 @@ describe('AnimeService', () => {
   test('should throw if update fails', async () => {
     mockRepo.update.mockResolvedValue(null);
 
-    await expect(service.updateAnime(1, { title: 'x' } as any)).rejects.toThrow(
+    await expect(service.updateAnime(1, { title: 'x' })).rejects.toThrow(
       'Anime not found',
     );
   });

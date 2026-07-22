@@ -1,16 +1,24 @@
-export class RecommendationService {
+import {
+  RecommendationFilters,
+  RecommendationRepository,
+} from '../../types/Recommendation';
+import { FilterStrategy } from './filter/FilterStrategy';
+import { ScoringStrategy } from './scoring/ScoringStrategy';
+import { SortStrategy } from './sorting/SortStrategy';
+
+export class RecommendationService<T> {
   constructor(
-    private repository: any,
+    private repository: RecommendationRepository<T>,
 
-    private filterStrategy: any,
+    private filterStrategy: FilterStrategy<T>,
 
-    private scoringStrategy: any,
+    private scoringStrategy: ScoringStrategy<T>,
 
-    private sortStrategies: any,
+    private sortStrategies: Record<string, SortStrategy<any>>,
   ) {}
 
-  // Recherche classique
-  async search(filters: any, sortType: string) {
+  // classic search
+  async search(filters: RecommendationFilters, sortType: string) {
     let items = await this.repository.findAll();
 
     items = this.filterStrategy.filter(items, filters);
@@ -27,8 +35,8 @@ export class RecommendationService {
     return sortStrategy.sort(items);
   }
 
-  // Recommandation barycentre
-  async recommend(favorites: any[], filters: any = {}) {
+  //  barycentre
+  async recommend(favorites: any[], filters: RecommendationFilters = {}) {
     let items = await this.repository.findAll();
 
     items = this.filterStrategy.filter(items, filters);

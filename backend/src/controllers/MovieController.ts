@@ -18,7 +18,7 @@ export class MovieController {
       const id = Number(req.params.id);
       const movie = await this.movieService.getMovieById(id);
       res.json(movie);
-    } catch (err: any) {
+    } catch {
       res.status(404).json({ message: 'movie not found' });
     }
   };
@@ -37,7 +37,7 @@ export class MovieController {
       const movie = await this.movieService.createMovie(result.data);
 
       res.status(201).json(movie);
-    } catch (err: any) {
+    } catch {
       res.status(500).json({ message: 'Server error' });
     }
   };
@@ -58,7 +58,7 @@ export class MovieController {
       const movie = await this.movieService.updateMovie(id, result.data);
 
       res.json(movie);
-    } catch (err: any) {
+    } catch {
       res.status(404).json({ message: 'movie not found' });
     }
   };
@@ -68,7 +68,7 @@ export class MovieController {
       const id = Number(req.params.id);
       await this.movieService.deleteMovie(id);
       res.json({ message: 'Deleted successfully' });
-    } catch (err: any) {
+    } catch {
       res.status(404).json({ message: 'movie not found' });
     }
   };

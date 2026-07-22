@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { RecommendationType } from '../types/Recommendation';
 
 export class RecommendationController {
   constructor(private services: any) {}
@@ -7,9 +8,9 @@ export class RecommendationController {
 
   search = async (req: Request, res: Response) => {
     try {
-      const type = req.params.type;
+      const type = req.params.type as RecommendationType;
 
-      const service = this.services[type as any];
+      const service = this.services[type];
 
       const result = await service.search(
         req.query,
@@ -19,9 +20,7 @@ export class RecommendationController {
 
       res.json(result);
     } catch (error: any) {
-      res.status(500).json({
-        message: error.message,
-      });
+      res.status(500).json({ message: 'Server error' });
     }
   };
 
@@ -29,9 +28,9 @@ export class RecommendationController {
 
   recommend = async (req: Request, res: Response) => {
     try {
-      const type = req.params.type;
+      const type = req.params.type as RecommendationType;
 
-      const service = this.services[type as any];
+      const service = this.services[type];
 
       const result = await service.recommend(
         req.body.favorites,
@@ -40,10 +39,8 @@ export class RecommendationController {
       );
 
       res.json(result);
-    } catch (error: any) {
-      res.status(500).json({
-        message: error.message,
-      });
+    } catch {
+      res.status(500).json({ message: 'Server error' });
     }
   };
 }

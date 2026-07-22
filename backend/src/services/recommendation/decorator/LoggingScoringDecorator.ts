@@ -1,7 +1,9 @@
-export class LoggingScoringDecorator {
-  constructor(private strategy: any) {}
+import { ScoringStrategy } from '../scoring/ScoringStrategy';
 
-  score(item: any, favorites: any[]) {
+export class LoggingScoringDecorator implements ScoringStrategy<any> {
+  constructor(private strategy: ScoringStrategy<any>) {}
+
+  score(item: any, favorites: any[]): number {
     console.log(`🎯 Calcul du score pour : ${item.title}`);
 
     const start = performance.now();

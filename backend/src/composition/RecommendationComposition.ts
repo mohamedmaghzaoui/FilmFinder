@@ -24,9 +24,7 @@ import { RecommendationController } from '../controllers/RecommendationControlle
 
 const config = AppConfig.getInstance();
 
-// =====================
 // repositories
-// =====================
 
 const movieRepository = config.isMock()
   ? new MovieMockRepository()
@@ -40,9 +38,7 @@ const seriesRepository = config.isMock()
   ? new SeriesMockRepository()
   : new SeriesRepository();
 
-// =====================
 // services
-// =====================
 
 const movieRecommendationService = RecommendationFactory.create(
   'movie',
@@ -62,9 +58,7 @@ const seriesRecommendationService = RecommendationFactory.create(
   seriesRepository,
 );
 
-// =====================
 // controller
-// =====================
 
 const recommendationController = new RecommendationController({
   movie: movieRecommendationService,

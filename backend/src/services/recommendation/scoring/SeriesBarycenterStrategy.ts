@@ -1,7 +1,8 @@
 import { ScoringStrategy } from './ScoringStrategy';
+import { Series } from '../../../types/Series';
 
-export class SeriesBarycenterStrategy implements ScoringStrategy<any> {
-  score(movie: any, favorites: any[]) {
+export class SeriesBarycenterStrategy implements ScoringStrategy<Series> {
+  score(item: Series, favorites: Series[]) {
     const profile = {
       characterDevelopment: this.normalize(
         this.avg(favorites, 'characterDevelopment'),
@@ -13,11 +14,11 @@ export class SeriesBarycenterStrategy implements ScoringStrategy<any> {
     };
 
     const normalizedMovie = {
-      characterDevelopment: this.normalize(movie.characterDevelopment),
-      storyComplexity: this.normalize(movie.storyComplexity),
-      episodeAddiction: this.normalize(movie.episodeAddiction),
-      dramaLevel: this.normalize(movie.dramaLevel),
-      humorLevel: this.normalize(movie.humorLevel),
+      characterDevelopment: this.normalize(Number(item.characterDevelopment)),
+      storyComplexity: this.normalize(Number(item.storyComplexity)),
+      episodeAddiction: this.normalize(Number(item.episodeAddiction)),
+      dramaLevel: this.normalize(Number(item.dramaLevel)),
+      humorLevel: this.normalize(Number(item.humorLevel)),
     };
 
     const distance = Math.sqrt(
@@ -32,8 +33,10 @@ export class SeriesBarycenterStrategy implements ScoringStrategy<any> {
     return 1 / (1 + distance);
   }
 
-  private avg(items: any[], key: string) {
-    return items.reduce((sum, item) => sum + item[key], 0) / items.length;
+  private avg(items: Series[], key: keyof Series) {
+    return (
+      items.reduce((sum, item) => sum + Number(item[key]), 0) / items.length
+    );
   }
 
   private normalize(value: number): number {
