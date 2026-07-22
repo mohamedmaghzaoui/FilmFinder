@@ -1,197 +1,104 @@
 # FilmFinder
 
-This repository contains a simple media catalogue API and a React frontend. This README focuses on the backend: how to run it (mock or dev modes), the technologies used, the data model and a complete list of API endpoints. At the end there are quick notes to start the frontend.
+FilmFinder is a media catalog project built with a Node.js/TypeScript backend and a React/Vite frontend. The current version focuses on movies, anime, and series, with a recommendation system and search endpoints.
 
-## Project status
+## État du projet
 
-Development-ready example API for Movies, Series and Anime with two data sources: in-memory mock and SQLite via Drizzle ORM.
+Le backend expose maintenant :
 
-## Base backend entry
+- des endpoints CRUD classiques pour les films, séries et anime
+- des endpoints de recherche avancée
+- des endpoints de recommandation basés sur un score barycentrique
+- une architecture orientée patterns de conception
 
-[backend/src/app.ts](backend/src/app.ts#L1)
+## Architecture du projet
 
-## Server runner
+### Backend
 
-[backend/src/server.ts](backend/src/server.ts#L1)
+- Runtime : Node.js + TypeScript
+- Framework web : Express
+- Validation : Zod
+- Documentation API : Swagger
+- Tests : Jest
 
-## Tech & Libraries
+### Frontend
 
-- Backend runtime: Node.js + TypeScript
-- Web framework: Express
-- ORM / DB: Drizzle ORM + better-sqlite3
-- Validation: Zod
-- Environment: cross-env for env scripts
-- Dev: ts-node-dev
+- Framework : React + Vite
+- Langage : TypeScript
 
-## Frontend
+## Structure importante
 
-- Framework: React + Vite
-- Language: TypeScript
-- Run (from repository root):
+- [backend/src/app.ts](backend/src/app.ts) : point d’entrée Express et montage des routes
+- [backend/src/server.ts](backend/src/server.ts) : démarrage du serveur
+- [backend/src/routes](backend/src/routes) : définition des routes API
+- [backend/src/composition](backend/src/composition) : composition des dépendances et instanciation des services
+- [backend/src/repositories](backend/src/repositories) : implémentations des repositories
+- [backend/src/mocks](backend/src/mocks) : données mock utilisées actuellement
+- [backend/src/config/AppConfig.ts](backend/src/config/AppConfig.ts) : configuration centralisée via le pattern Singleton
+
+## Configuration avec Singleton
+
+La configuration de l’application est centralisée dans [backend/src/config/AppConfig.ts](backend/src/config/AppConfig.ts).
+
+Le singleton permet de :
+
+- stocker la configuration globale de l’application
+- centraliser le port et le mode d’exécution
+- éviter plusieurs instances de configuration concurrentes
+
+## Patterns de conception utilisés
+
+Le projet utilise actuellement 4 patterns principaux :
+
+1. Singleton
+   - [backend/src/config/AppConfig.ts](backend/src/config/AppConfig.ts)
+   - Une seule instance de configuration est utilisée dans toute l’application.
+
+2. Factory
+   - [backend/src/services/recommendation/factory/RecommendationFactory.ts](backend/src/services/recommendation/factory/RecommendationFactory.ts)
+   - La factory crée le service de recommandation adapté au type demandé : movie, anime ou series.
+
+3. Strategy
+   - [backend/src/services/recommendation/filter](backend/src/services/recommendation/filter)
+   - [backend/src/services/recommendation/scoring](backend/src/services/recommendation/scoring)
+   - [backend/src/services/recommendation/sorting](backend/src/services/recommendation/sorting)
+   - Les algorithmes de filtrage, de scoring et de tri sont encapsulés dans des stratégies interchangeables.
+
+4. Decorator
+   - [backend/src/services/recommendation/decorator/LoggingScoringDecorator.ts](backend/src/services/recommendation/decorator/LoggingScoringDecorator.ts)
+   - Le décorateur ajoute un comportement supplémentaire au scoring sans modifier la logique de base.
+
+## Données mock
+
+Le projet utilise actuellement des repositories mock pour fournir des données en mémoire.
+
+Les mocks sont disponibles dans :
+
+- [backend/src/mocks/Movies.ts](backend/src/mocks/Movies.ts)
+- [backend/src/mocks/Series.ts](backend/src/mocks/Series.ts)
+- [backend/src/mocks/Anime.ts](backend/src/mocks/Anime.ts)
+
+Les repositories mock correspondants sont dans :
+
+- [backend/src/repositories/movie/MovieMockRepository.ts](backend/src/repositories/movie/MovieMockRepository.ts)
+- [backend/src/repositories/series/SeriesMockRepository.ts](backend/src/repositories/series/SeriesMockRepository.ts)
+- [backend/src/repositories/anime/AnimeMockRepository.ts](backend/src/repositories/anime/AnimeMockRepository.ts)
+
+## Démarrage du projet
+
+### Backend
+
+Depuis la racine du projet :
 
 ```bash
-cd frontend
-npm install
-npm run dev
-```
-
-The frontend is a simple Vite React app that expects the backend at `http://localhost:3000`.
-
-## Prerequisites
-
-- Node.js (recommended v18+)
-- npm (or yarn)
-
-**Repository layout (backend-focused)**
-
-- `backend/src/app.ts`: Express app and route mounts
-- `backend/src/server.ts`: app bootstrap
-- `backend/src/modules/*`: domain modules (movie, series, anime)
-- `backend/src/db/schema.ts`: Drizzle table definitions
-- `backend/src/config/dataSource.ts`: toggles mock vs db using `DATA_SOURCE` env var
-
-**Environment / Modes**
-
-- The backend supports two run modes controlled by `DATA_SOURCE`:
-  - `DATA_SOURCE=mock` — uses in-memory mock repositories (quick local development & tests)
-  - `DATA_SOURCE=db` — uses the SQLite database via Drizzle
-
-Run using the npm scripts in [backend/package.json](backend/package.json#L1):
-
-```bash
-# from the repository root
 cd backend
-
-# Run with the mock in-memory data source (hot-reloads)
+npm install
 npm run mock
-
-# Run with the real DB data source (uses SQLite via Drizzle)
-npm run dev
 ```
 
-Both scripts run `ts-node-dev` and start the server on port 3000 by default.
+Le serveur démarre sur `http://localhost:3000`.
 
-**How the data source is selected**
-
-- See [backend/src/config/dataSource.ts](backend/src/config/dataSource.ts#L1). The code checks `process.env.DATA_SOURCE` to decide which repository implementation the module compositions will instantiate.
-
-## API reference (backend)
-
-Base URL: `http://localhost:3000`
-
-All endpoints follow a consistent REST shape. Each resource supports: `GET /` (list), `GET /:id` (detail), `POST /` (create), `PUT /:id` (update), `DELETE /:id` (delete).
-
-- Movies: mounted at `/movies` — routes configured in [backend/src/modules/movie/MovieRoutes.ts](backend/src/modules/movie/MovieRoutes.ts#L1)
-  - `GET /movies` — list all movies
-  - `GET /movies/:id` — get movie by id
-  - `POST /movies` — create movie (returns 201)
-  - `PUT /movies/:id` — update movie
-  - `DELETE /movies/:id` — delete movie
-
-- Anime: mounted at `/anime` — routes configured in [backend/src/modules/anime/AnimeRoutes.ts](backend/src/modules/anime/AnimeRoutes.ts#L1)
-  - `GET /anime` — list all anime
-  - `GET /anime/:id` — get anime by id
-  - `POST /anime` — create anime (returns 201)
-  - `PUT /anime/:id` — update anime
-  - `DELETE /anime/:id` — delete anime
-
-- Series: mounted at `/series` — routes configured in [backend/src/modules/series/SeriesRoutes.ts](backend/src/modules/series/SeriesRoutes.ts#L1)
-  - `GET /series` — list all series
-  - `GET /series/:id` — get series by id
-  - `POST /series` — create series (returns 201)
-  - `PUT /series/:id` — update series
-  - `DELETE /series/:id` — delete series
-
-Request validation
-
-- Requests to `POST` and `PUT` are validated with Zod. Validation schemas are in each module under `schema/`.
-  - Movie schemas: [backend/src/modules/movie/schema/movieSchema.ts](backend/src/modules/movie/schema/movieSchema.ts#L1)
-  - Anime schemas: [backend/src/modules/anime/schema/animeSchema.ts](backend/src/modules/anime/schema/animeSchema.ts#L1)
-  - Series schemas: [backend/src/modules/series/schema/SeriesSchema.ts](backend/src/modules/series/schema/SeriesSchema.ts#L1)
-
-Example request bodies
-
-- Create Movie (POST /movies)
-
-```json
-{
-  "title": "Inception",
-  "genre": "Sci-Fi",
-  "duration": 148,
-  "rating": 8.8,
-  "releaseYear": 2010,
-  "description": "A thief who steals secrets through dreams."
-}
-```
-
-- Create Anime (POST /anime)
-
-```json
-{
-  "title": "Naruto",
-  "genre": "Action",
-  "episodes": 220,
-  "rating": 4.7,
-  "releaseYear": 2002,
-  "status": "finished",
-  "description": "A young ninja seeks recognition."
-}
-```
-
-- Create Series (POST /series)
-
-```json
-{
-  "title": "Breaking Bad",
-  "genre": "Crime",
-  "seasons": 5,
-  "episodes": 62,
-  "rating": 4.9,
-  "releaseYear": 2008,
-  "description": "A chemistry teacher turned meth producer."
-}
-```
-
-Data model / Entities
-
-- The table definitions are in [backend/src/db/schema.ts](backend/src/db/schema.ts#L1). Important fields per entity:
-
-- Movie
-  - `id` (integer, PK)
-  - `title` (text)
-  - `genre` (text)
-  - `duration` (integer)
-  - `rating` (real)
-  - `releaseYear` (integer)
-  - `description` (text)
-
-- Series
-  - `id`, `title`, `genre`
-  - `seasons` (integer)
-  - `episodes` (integer)
-  - `rating`, `releaseYear`, `description`
-
-- Anime
-  - `id`, `title`, `genre`
-  - `episodes` (integer)
-  - `rating`, `releaseYear`
-  - `status` (text) — expected values: `ongoing` | `finished`
-  - `description`
-
-Mock data
-
-- Example mock data is available in each module under `mocks/`. The compositions choose the mock or real repository based on `DATA_SOURCE`.
-  - [backend/src/modules/movie/mocks/Movies.ts](backend/src/modules/movie/mocks/Movies.ts#L1)
-  - [backend/src/modules/series/mocks/Series.ts](backend/src/modules/series/mocks/Series.ts#L1)
-  - [backend/src/modules/anime/mocks/Anime.ts](backend/src/modules/anime/mocks/Anime.ts#L1)
-
-Notes on repositories and switching data source
-
-- Each module has two repository implementations (mock + real). The composition files decide which to instantiate by calling `isMock()` from [backend/src/config/dataSource.ts](backend/src/config/dataSource.ts#L1).
-
-Running the frontend
-
-- The frontend is a Vite React app. To run it:
+### Frontend
 
 ```bash
 cd frontend
@@ -199,23 +106,85 @@ npm install
 npm run dev
 ```
 
-This will start the Vite dev server (default `http://localhost:5173`). The frontend expects the backend API at `http://localhost:3000` by default.
+Le frontend est disponible sur `http://localhost:5173`.
 
-Testing, formatting & linting
+## API backend
 
-- Backend format script: `cd backend && npm run format` (uses Prettier)
-- Frontend format script: `cd frontend && npm run format`
+Base URL : `http://localhost:3000`
 
-Further improvements and notes
+### Endpoints CRUD
 
-- Add a `.env.example` with `DATA_SOURCE` and any DB path configuration.
-- Provide a small migration / seed step (drizzle-kit) for the SQLite database, if you want persistent seeded data in `db/`.
+- `GET /movies` : lister les films
+- `GET /movies/:id` : récupérer un film
+- `POST /movies` : créer un film
+- `PUT /movies/:id` : modifier un film
+- `DELETE /movies/:id` : supprimer un film
 
-If you want, I can:
+- `GET /anime` : lister les anime
+- `GET /anime/:id` : récupérer un anime
+- `POST /anime` : créer un anime
+- `PUT /anime/:id` : modifier un anime
+- `DELETE /anime/:id` : supprimer un anime
 
-- add a `.env.example` and a simple migration/seed script
-- add OpenAPI / Swagger docs for the endpoints
+- `GET /series` : lister les séries
+- `GET /series/:id` : récupérer une série
+- `POST /series` : créer une série
+- `PUT /series/:id` : modifier une série
+- `DELETE /series/:id` : supprimer une série
 
----
+### Endpoints de recherche
 
-Generated by your development assistant — let me know if you want this README expanded (examples, curl snippets, or OpenAPI export).
+Route : [backend/src/routes/RecommendationRoutes.ts](backend/src/routes/RecommendationRoutes.ts)
+
+- `GET /recommendations/:type/search`
+
+Exemple :
+
+```bash
+curl "http://localhost:3000/recommendations/movie/search?genre=Action&rating=4&releaseYear=2020&sort=rating"
+```
+
+Paramètres possibles :
+
+- `genre`
+- `rating`
+- `releaseYear`
+- `sort` : `rating`, `releaseYear` ou `score`
+
+### Endpoints de recommandation
+
+- `POST /recommendations/:type/score`
+
+Exemple de body :
+
+```json
+{
+  "favorites": [
+    { "genre": "Action", "rating": 8 },
+    { "genre": "Sci-Fi", "rating": 7 }
+  ],
+  "filters": {
+    "genre": "Action",
+    "releaseYear": 2020
+  }
+}
+```
+
+Les types supportés sont : `movie`, `anime` et `series`.
+
+## Documentation Swagger
+
+La documentation Swagger est disponible à :
+
+```text
+http://localhost:3000/docs
+```
+
+## Tests
+
+Les tests backend peuvent être lancés avec :
+
+```bash
+cd backend
+npm test
+```
