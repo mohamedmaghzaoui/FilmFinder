@@ -1,5 +1,4 @@
 import { AppConfig } from '../config/AppConfig';
-import { isMock } from '../config/dataSource';
 import { SeriesController } from '../controllers/SeriesController';
 import { SeriesMockRepository } from '../repositories/series/SeriesMockRepository';
 import { SeriesRepository } from '../repositories/series/SeriesRepository';
