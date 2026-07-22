@@ -2,8 +2,11 @@ import { RecommendationService } from '../RecommendationService';
 
 import { DefaultFilter } from '../filter/DefaultFilter';
 
+// we can use these sorting algo if neededd
 import { MovieBarycenterStrategy } from '../scoring/MovieBarycenterStrategy';
-// we can use this for barycentre instead of pondération
+import { AnimeWeightedStrategy } from '../scoring/AnimeWeightedStrategy';
+import { SeriesWeightedStrategy } from '../scoring/SeriesWeightedStrategy';
+
 import { AnimeBarycenterStrategy } from '../scoring/AnimeBarycenterStrategy';
 import { SeriesBarycenterStrategy } from '../scoring/SeriesBarycenterStrategy';
 
